@@ -25,6 +25,7 @@ ae.Conductor = function(bpm, timesig, downbeats, players, function_downbeat, fun
     this.nextBpm = this.bpm
     this.nextInterval = this.interval;
     this.nextTimesig = this.timesig;
+    this.nextDownbeats = this.downbeats;
     this.nextPlayers = this.players;
 
     // this.toNextSection = false;
@@ -47,6 +48,7 @@ ae.Conductor = function(bpm, timesig, downbeats, players, function_downbeat, fun
                 conductor.bpm = conductor.nextBpm;
                 conductor.interval = "BPM" + conductor.bpm + " L4";
                 conductor.timesig = conductor.nextTimesig;
+                conducto.downbeats = conductor.nextDownbeats;
                 conductor.players = conductor.nextPlayers;
 
                 //reset globs

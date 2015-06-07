@@ -5,8 +5,10 @@
 // var bpm = btom(232);
 var disstheme_bpm = 80.75;
 var disstheme_timesig = 4*4; //4 beats * 4 bars
+var disstheme_downbeats = [0, 3*4, 5*4, 7*4];
 var kinotheme_bpm = 170;
 var kinotheme_timesig = 76;
+var kinotheme_downbeats = [0];
 var mp3dir = "../layers%20Project/stems/"
 
 //DISSTHEME_STRINGS
@@ -29,7 +31,7 @@ var kinotheme_arr = [kinotheme_piano, kinotheme_vox];
 var loop_arr = disstheme_arr;
 var loop_timesig = disstheme_timesig;
 
-var conductor = new AudioEngine.Conductor(disstheme_bpm, loop_timesig, loop_arr, function() {
+var conductor = new AudioEngine.Conductor(disstheme_bpm, loop_timesig, disstheme_downbeats, loop_arr, function() {
     console.log("START");
     // pauseLoops(loop_arr);
     // playLoops(loop_arr);
@@ -51,6 +53,7 @@ function toKinotheme() {
     // loop_timesig = kinotheme_timesig;
     conductor.nextPlayers = kinotheme_arr;
     conductor.nextTimesig = kinotheme_timesig;
+    conductor.nextDownbeats = kinotheme_downbeats;
     conductor.toNext = true;
     // playLoops(loop_arr);
 
@@ -59,6 +62,7 @@ function toKinotheme() {
 function toDisstheme() {
     conductor.nextPlayers = disstheme_arr;
     conductor.nextTimesig = disstheme_timesig;
+    conductor.nextDownbeats = disstheme_downbeats;
     conductor.toNext = true;
 }
 
