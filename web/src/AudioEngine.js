@@ -12,12 +12,13 @@ var AudioEngine = (function(ae) {
 */
 
 //Constructor
-ae.Conductor = function(bpm, timesig, players, function_downbeat, function_upbeat, function_stop) {
+ae.Conductor = function(bpm, timesig, downbeats, players, function_downbeat, function_upbeat, function_stop) {
     var conductor = this;
     this.bpm = bpm;
     this.interval = "BPM" + this.bpm + " L4";
     this.timesig = timesig;
     this.players = players;
+    this.downbeats = downbeats;
     console.log(this.bpm);
     
     this.toNext = false;
@@ -37,7 +38,7 @@ ae.Conductor = function(bpm, timesig, players, function_downbeat, function_upbea
     // var timesig = this.timesig;
     this.metro = T("interval", {interval: conductor.interval}, function(count) {
         var beat = count % conductor.timesig;
-        if (beat == 0) {
+        if (downbeats.indexOf(beat) >= 0) {
             if (conductor.toNext) {
                 //stop current
                 conductor.pausePlayers();
@@ -185,22 +186,24 @@ ae.LoopMaster.prototype.checkAllLoaded = function() {
 
     - mute/unmute is similar to on/off but takes place immediately
 */
-ae.Loop = function(loop, init) {
+ae.Loop = function(init, loop, tail) {
+    this.init = ae.to_audio(init);    
     this.loop = ae.to_audio(loop);
-    this.init = 0;
-    this.initPlayed = true;
+    this.tail = ae.to_audio(tail);
+    this.initPlayed = false;
     this.activated = true;
+    this.url_init = init;
     this.url_loop = loop;
     // this.loopPlaying = false;
-    if (init == undefined) {
-        this.init = this.loop;
-        this.url_init = loop;
-    }
-    else {
-        this.init = ae.to_audio(init);
-        this.initPlayed = false;
-        this.url_init = init;
-    }
+
+    // //safeguard; use loop as init if no init available
+    // if (init == undefined) {
+    //     this.init = this.loop;
+    //     this.url_init = loop;
+    // }
+    // else {
+    //     this.init = ae.to_audio(init);
+    // }
 }
 
 //Play/pause

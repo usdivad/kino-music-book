@@ -3,29 +3,33 @@
 
 //GLOB
 // var bpm = btom(232);
-var bpm = 232;
-var v_timesig = 13 * 4; //13 beats * 4 bars
-var c_timesig = 24;
+var disstheme_bpm = 80.75;
+var disstheme_timesig = 4*4; //4 beats * 4 bars
+var kinotheme_bpm = 170;
+var kinotheme_timesig = 76;
+var mp3dir = "../layers%20Project/stems/"
 
-//VERSE
-var v_piano = new AudioEngine.Loop("mp3/v_piano_loop.mp3", "mp3/v_piano_init.mp3");
-var v_backpiano = new AudioEngine.Loop("mp3/v_backpiano_loop.mp3");
-var v_drums = new AudioEngine.Loop("mp3/v_drums_loop.mp3");
-var v_arr = [v_piano, v_backpiano, v_drums];
+//DISSTHEME_STRINGS
+var disstheme_violin1 = new AudioEngine.Loop(mp3dir + "disstheme_strings head violin1.wav", mp3dir + "disstheme_strings loop violin1.wav", mp3dir + "disstheme_strings tail violin1.wav");
+var disstheme_violin2 = new AudioEngine.Loop(mp3dir + "disstheme_strings head violin2.wav", mp3dir + "disstheme_strings loop violin2.wav", mp3dir + "disstheme_strings tail violin2.wav");
+var disstheme_viola = new AudioEngine.Loop(mp3dir + "disstheme_strings head viola.wav", mp3dir + "disstheme_strings loop viola.wav", mp3dir + "disstheme_strings tail viola.wav");
+var disstheme_cello = new AudioEngine.Loop(mp3dir + "disstheme_strings head cello.wav", mp3dir + "disstheme_strings loop cello.wav", mp3dir + "disstheme_strings tail cello.wav");
 
-//CHORUS
-var c_piano = new AudioEngine.Loop("mp3/c_piano_loop.mp3", "mp3/c_piano_init.mp3");
-var c_backpiano = new AudioEngine.Loop("mp3/c_backpiano_loop.mp3");
-var c_drums = new AudioEngine.Loop("mp3/c_drums_loop.mp3");
-var c_arr = [c_piano, c_backpiano, c_drums];
+var disstheme_arr = [disstheme_violin1, disstheme_violin2, disstheme_viola, disstheme_cello];
 
-var sprite_gtr = AudioEngine.to_audio("mp3/sprite_gtr.mp3");
+//KINOTHEME
+var kinotheme_piano = new AudioEngine.Loop(mp3dir + "kinotheme head piano.wav", mp3dir + "kinotheme loop piano.wav", mp3dir + "kinotheme tail piano.wav");
+var kinotheme_vox = new AudioEngine.Loop(mp3dir + "kinotheme head vox.wav");
+var kinotheme_arr = [kinotheme_piano, kinotheme_vox];
+
+// var sprite_gtr = AudioEngine.to_audio("mp3/sprite_gtr.mp3");
 
 
 //Conductor settings
-var loop_arr = v_arr;
-var loop_timesig = v_timesig;
-var conductor = new AudioEngine.Conductor(bpm, loop_timesig, loop_arr, function() {
+var loop_arr = disstheme_arr;
+var loop_timesig = disstheme_timesig;
+
+var conductor = new AudioEngine.Conductor(disstheme_bpm, loop_timesig, loop_arr, function() {
     console.log("START");
     // pauseLoops(loop_arr);
     // playLoops(loop_arr);
@@ -40,21 +44,21 @@ var conductor = new AudioEngine.Conductor(bpm, loop_timesig, loop_arr, function(
 
 
 //Transition between sections
-function toChorus() {
+function toKinotheme() {
     // pauseLoops(loop_arr);
     // conductor.toNextSection = true;
-    // loop_arr = c_arr;
-    // loop_timesig = c_timesig;
-    conductor.nextPlayers = c_arr;
-    conductor.nextTimesig = c_timesig;
+    // loop_arr = kinotheme_arr;
+    // loop_timesig = kinotheme_timesig;
+    conductor.nextPlayers = kinotheme_arr;
+    conductor.nextTimesig = kinotheme_timesig;
     conductor.toNext = true;
     // playLoops(loop_arr);
 
 }
 
-function toVerse() {
-    conductor.nextPlayers = v_arr;
-    conductor.nextTimesig = v_timesig;
+function toDisstheme() {
+    conductor.nextPlayers = disstheme_arr;
+    conductor.nextTimesig = disstheme_timesig;
     conductor.toNext = true;
 }
 
@@ -72,26 +76,26 @@ function toVerse() {
 //     }
 // }
 
-var dbf = function() {
-    var sprite = sprite_gtr.slice(250, 500);
-    sprite.play();
-}
+// var dbf = function() {
+//     var sprite = sprite_gtr.slice(250, 500);
+//     sprite.play();
+// }
 
 //conductor.setFunctionDownbeat(dbf);
 
-// var v_loop_backpiano = to_loop("mp3/v_backpiano_loop.mp3");
-// var v_loop_piano = to_loop("mp3/v_piano_loop.mp3");
-// var v_loops = new LoopMaster([v_loop_backpiano, v_loop_piano]);
+// var disstheme_loop_backpiano = to_loop("mp3/disstheme_backpiano_loop.mp3");
+// var disstheme_loop_piano = to_loop("mp3/disstheme_piano_loop.mp3");
+// var disstheme_loops = new LoopMaster([disstheme_loop_backpiano, disstheme_loop_piano]);
 // var sprite_gtr = to_audio("mp3/sprite_gtr.mp3");
-// var v_piano = to_audio("mp3/v_backpiano_loop.mp3");
+// var disstheme_piano = to_audio("mp3/disstheme_backpiano_loop.mp3");
 
 // //trying out scheduler using loops, sim playing
 // var all_loaded = false;
 // var scheduler = window.setInterval(function() {
-//     v_loops.checkAllLoaded();
-//     if (v_loops.all_loaded && sprite_gtr.isLoaded) {
+//     disstheme_loops.checkAllLoaded();
+//     if (disstheme_loops.all_loaded && sprite_gtr.isLoaded) {
 //         metro.start();
-//         // v_loops.start();
+//         // disstheme_loops.start();
 //         window.clearInterval(scheduler);
 //         console.log("let's play");
 //     }
