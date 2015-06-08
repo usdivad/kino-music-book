@@ -255,6 +255,7 @@ ae.Loop = function(init, loop, tail) {
     this.url_init = init;
     this.url_loop = loop;
     this.url_tail = tail;
+    this.mul = 1;
     // this.loopPlaying = false;
 
     // //safeguard; use loop as init if no init available
@@ -322,13 +323,51 @@ ae.Loop.prototype.off = function() {
 ae.Loop.prototype.setMul = function(mul) {
     this.loop.mul = mul;
     this.init.mul = mul;
+    this.tail.mul = mul;
+    this.mul = mul;
 }
 ae.Loop.prototype.mute = function() {
+    // var table = [1, [0, 1500]];
+    // var env = T("env", {table: table});
+    // this.setMul(env);
+
     this.setMul(0);
 }
 
 ae.Loop.prototype.unmute = function() {
+    // this.setMul([0, [1, 1500]]);
+
     this.setMul(1);
+}
+
+ae.Loop.prototype.fadeOut = function(step, interval) {
+    var loop = this;
+    var timer = setInterval(function() {
+        if (loop.mul <= 0) {
+            clearInterval(timer);
+            console.log("fadeOut done");
+        }
+        else {
+            loop.setMul(loop.mul);
+            loop.mul -= step;
+        }
+        console.log(loop.mul);
+    }, interval);
+}
+
+ae.Loop.prototype.fadeIn = function(step, interval) {
+    var loop = this;
+    var timer = setInterval(function() {
+        if (loop.mul >= 1) {
+            clearInterval(timer);
+            console.log("fadeIn done");
+        }
+        else {
+            loop.setMul(loop.mul);
+            loop.mul += step;
+        }
+        console.log(loop.mul);
+    }, interval);
 }
 
 /*
