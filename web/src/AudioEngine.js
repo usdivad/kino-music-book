@@ -19,6 +19,7 @@ ae.Conductor = function(bpm, timesig, downbeats, players, function_downbeat, fun
     this.timesig = timesig;
     this.players = players;
     this.downbeats = downbeats;
+    this.all_loaded = false;
     console.log(this.bpm);
     
     this.toNext = false;
@@ -64,9 +65,9 @@ ae.Conductor = function(bpm, timesig, downbeats, players, function_downbeat, fun
                 conductor.metro.count = 0; //hacky
                 conductor.toNext = false;
                 console.log("transitioned toNext");
+                conductor.resetPlayers();
 
                 //play new
-                conductor.resetPlayers();
                 conductor.metro.start();
                 // conductor.playPlayers();
             }
@@ -87,7 +88,13 @@ ae.Conductor = function(bpm, timesig, downbeats, players, function_downbeat, fun
 
 ae.Conductor.prototype.start = function() {
     // this.playPlayers();
-    this.metro.start();
+    this.checkAllLoaded();
+    if (this.all_loaded) {
+        this.metro.start();
+    }
+    else {
+        console.log("loops not yet all loaded; try again later~");
+    }
 }
 ae.Conductor.prototype.stop = function() {
     this.pausePlayers();
@@ -123,6 +130,25 @@ ae.Conductor.prototype.setTimesig = function(timesig) {
 
 }
 
+ae.Conductor.prototype.checkAllLoaded = function() {
+    if (this.all_loaded) {
+        return true;
+    }
+    else {
+        var all_loaded = true;
+        for (var i=0; i<this.players.length; i++) {
+            var loop = this.players[i];
+            if (!(loop.init.isLoaded && loop.loop.isLoaded && loop.tail.isLoaded)) {
+                console.log(loop);
+                all_loaded = false;
+                return all_loaded;
+            }
+        }
+        this.all_loaded = all_loaded;
+        return all_loaded;
+    }
+}
+
 
 // Conductor.prototype.setFunctionDownbeat = function(fn) {
 //     this.function_downbeat = fn;
@@ -153,56 +179,56 @@ ae.Conductor.prototype.setTimesig = function(timesig) {
     (the loops themselves exist outside of the LoopMaster object)
 */
 
-//Constructor
-ae.LoopMaster = function(loops) {
-    this.loops = loops;
-    this.master = T("+", loops);
-    this.all_loaded = false;
-}
+// //Constructor
+// ae.LoopMaster = function(loops) {
+//     this.loops = loops;
+//     this.master = T("+", loops);
+//     this.all_loaded = false;
+// }
 
-//Start and set all loop offsets to 0
-ae.LoopMaster.prototype.start = function() {
-    this.checkAllLoaded();
-    if (this.all_loaded) {
-        for (var i=0; i<this.loops.length; i++) {
-            var loop = this.loops[i];
-            loop.currentTime = 0;
-        }
-        this.master.play();
-    }
-    else {
-        console.log("loops not yet all loaded; try again later~");
-    }
-}
+// //Start and set all loop offsets to 0
+// ae.LoopMaster.prototype.start = function() {
+//     this.checkAllLoaded();
+//     if (this.all_loaded) {
+//         for (var i=0; i<this.loops.length; i++) {
+//             var loop = this.loops[i];
+//             loop.currentTime = 0;
+//         }
+//         this.master.play();
+//     }
+//     else {
+//         console.log("loops not yet all loaded; try again later~");
+//     }
+// }
 
-//Stop and set all loop offsets to 0
-ae.LoopMaster.prototype.stop = function() {
-    this.master.pause();
-    for (var i=0; i<this.loops.length; i++) {
-        var loop = this.loops[i];
-        loop.currentTime = 0;
-    }
-}
+// //Stop and set all loop offsets to 0
+// ae.LoopMaster.prototype.stop = function() {
+//     this.master.pause();
+//     for (var i=0; i<this.loops.length; i++) {
+//         var loop = this.loops[i];
+//         loop.currentTime = 0;
+//     }
+// }
 
-//Check if all tracks are loaded
-ae.LoopMaster.prototype.checkAllLoaded = function() {
-    if (this.all_loaded) {
-        return true;
-    }
-    else {
-        var all_loaded = true;
-        for (var i=0; i<this.loops.length; i++) {
-            var loop = this.loops[i];
-            if (!loop.isLoaded) {
-                console.log(loop);
-                all_loaded = false;
-                break;
-            }
-        }
-        this.all_loaded = all_loaded;
-        return all_loaded;
-    }
-}
+// //Check if all tracks are loaded
+// ae.LoopMaster.prototype.checkAllLoaded = function() {
+//     if (this.all_loaded) {
+//         return true;
+//     }
+//     else {
+//         var all_loaded = true;
+//         for (var i=0; i<this.loops.length; i++) {
+//             var loop = this.loops[i];
+//             if (!loop.isLoaded) {
+//                 console.log(loop);
+//                 all_loaded = false;
+//                 break;
+//             }
+//         }
+//         this.all_loaded = all_loaded;
+//         return all_loaded;
+//     }
+// }
 
 /*
     Loop object.
@@ -211,8 +237,9 @@ ae.LoopMaster.prototype.checkAllLoaded = function() {
     Note that the loop audio may have a tail as well
 
     Vars:
-    - loop = the looped audio
     - init = the initial audio (first play)
+    - loop = the looped audio
+    - tail = the tail audio (last play)
     - initPlayed = whether init has been played yet
     - activated = whether loop is "activated" or not within current cycle (on/off ctrl)
 
@@ -249,7 +276,7 @@ ae.Loop.prototype.play = function() {
         this.tail.play();
         this.tail.bang();
         console.log("playing tail: " + this.url_tail);
-        this.activated = false;
+        // this.activated = false;
     }
     else if (this.initPlayed) {
         //this.init.pause();
