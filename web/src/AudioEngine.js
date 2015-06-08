@@ -47,6 +47,8 @@ ae.Conductor = function(bpm, timesig, downbeats, players, function_downbeat, fun
             if (conductor.toNext) {
                 //stop current
                 conductor.pausePlayers();
+                conductor.toggleTail(true);
+                conductor.playPlayers();
 
                 //set next
                 conductor.bpm = conductor.nextBpm;
@@ -97,9 +99,16 @@ ae.Conductor.prototype.pausePlayers = function() {
     }
 }
 
+ae.Conductor.prototype.toggleTail = function(tf) {
+    for (var i=0; i<this.players.length; i++) {
+        this.players[i].playTail = tf;
+    }
+}
+
 ae.Conductor.prototype.setTimesig = function(timesig) {
 
 }
+
 
 // Conductor.prototype.setFunctionDownbeat = function(fn) {
 //     this.function_downbeat = fn;
@@ -222,19 +231,18 @@ ae.Loop.prototype.play = function() {
     if (!this.activated) {
         return;
     }
-    if (this.initPlayed) {
+    if (this.playTail) {
+        this.tail.play();
+        this.tail.bang();
+        console.log("playing tail: " + this.url_tail);
+        this.activated = false;
+    }
+    else if (this.initPlayed) {
         //this.init.pause();
         //this.init.currentTime = 0;
-        if (this.playTail) {
-            this.tail.play();
-            this.tail.bang();
-            console.log("playing tail: " + this.url_tail);
-        }
-        else {
-            this.loop.play();
-            this.loop.bang();
-            console.log("playing loop: " + this.url_loop);
-        }
+        this.loop.play();
+        this.loop.bang();
+        console.log("playing loop: " + this.url_loop);
     }
     else {
         this.init.play();
