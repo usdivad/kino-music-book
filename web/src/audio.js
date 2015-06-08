@@ -4,8 +4,8 @@
 //GLOB
 // var bpm = btom(232);
 var disstheme_bpm = 80.75;
-var disstheme_timesig = 4*4; //4 beats * 4 bars
-var disstheme_downbeats = [0, 3*4, 5*4, 7*4];
+var disstheme_timesig = 7*4; //7 bars * 4 beats
+var disstheme_downbeats = [0, 2*4, 4*4, 6*4, 7*4];
 var kinotheme_bpm = 170;
 var kinotheme_timesig = 76;
 var kinotheme_downbeats = [0];

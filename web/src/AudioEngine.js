@@ -39,7 +39,11 @@ ae.Conductor = function(bpm, timesig, downbeats, players, function_downbeat, fun
     // var timesig = this.timesig;
     this.metro = T("interval", {interval: conductor.interval}, function(count) {
         var beat = count % conductor.timesig;
-        if (downbeats.indexOf(beat) >= 0) {
+        if (beat == 0) {
+            conductor.function_downbeat();
+            conductor.playPlayers();
+        }
+        else if (downbeats.indexOf(beat) >= 0) {
             if (conductor.toNext) {
                 //stop current
                 conductor.pausePlayers();
@@ -48,16 +52,19 @@ ae.Conductor = function(bpm, timesig, downbeats, players, function_downbeat, fun
                 conductor.bpm = conductor.nextBpm;
                 conductor.interval = "BPM" + conductor.bpm + " L4";
                 conductor.timesig = conductor.nextTimesig;
-                conducto.downbeats = conductor.nextDownbeats;
+                conductor.downbeats = conductor.nextDownbeats;
                 conductor.players = conductor.nextPlayers;
 
                 //reset globs
                 conductor.metro.count = 0; //hacky
                 conductor.toNext = false;
                 console.log("transitioned toNext");
+
+                //play new
+                conductor.playPlayers();
             }
-            conductor.playPlayers();
-            conductor.function_downbeat();
+            // conductor.playPlayers();
+            // conductor.function_downbeat();
             // console.log("beep");
         }
         else {
@@ -69,7 +76,7 @@ ae.Conductor = function(bpm, timesig, downbeats, players, function_downbeat, fun
 }
 
 ae.Conductor.prototype.start = function() {
-    this.playPlayers();
+    // this.playPlayers();
     this.metro.start();
 }
 ae.Conductor.prototype.stop = function() {
@@ -193,9 +200,11 @@ ae.Loop = function(init, loop, tail) {
     this.loop = ae.to_audio(loop);
     this.tail = ae.to_audio(tail);
     this.initPlayed = false;
+    this.playTail = false;
     this.activated = true;
     this.url_init = init;
     this.url_loop = loop;
+    this.url_tail = tail;
     // this.loopPlaying = false;
 
     // //safeguard; use loop as init if no init available
@@ -216,9 +225,16 @@ ae.Loop.prototype.play = function() {
     if (this.initPlayed) {
         //this.init.pause();
         //this.init.currentTime = 0;
-        this.loop.play();
-        this.loop.bang();
-        console.log("playing loop: " + this.url_loop);
+        if (this.playTail) {
+            this.tail.play();
+            this.tail.bang();
+            console.log("playing tail: " + this.url_tail);
+        }
+        else {
+            this.loop.play();
+            this.loop.bang();
+            console.log("playing loop: " + this.url_loop);
+        }
     }
     else {
         this.init.play();
