@@ -52,6 +52,7 @@ function toKinotheme() {
     // loop_arr = kinotheme_arr;
     // loop_timesig = kinotheme_timesig;
     conductor.nextPlayers = kinotheme_arr;
+    conductor.nextBpm = kinotheme_bpm;
     conductor.nextTimesig = kinotheme_timesig;
     conductor.nextDownbeats = kinotheme_downbeats;
     conductor.toNext = true;
@@ -61,6 +62,7 @@ function toKinotheme() {
 
 function toDisstheme() {
     conductor.nextPlayers = disstheme_arr;
+    conductor.nextBpm = disstheme_bpm;
     conductor.nextTimesig = disstheme_timesig;
     conductor.nextDownbeats = disstheme_downbeats;
     conductor.toNext = true;

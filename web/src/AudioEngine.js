@@ -37,7 +37,8 @@ ae.Conductor = function(bpm, timesig, downbeats, players, function_downbeat, fun
 
     //metro construct (use "conductor" not "this" to point at Conductor)
     // var timesig = this.timesig;
-    this.metro = T("interval", {interval: conductor.interval}, function(count) {
+    // this.metro = T("interval", {interval: conductor.interval}, function(count) {
+    this.metroFunction = function(count) {
         var beat = count % conductor.timesig;
         if (beat == 0) {
             conductor.function_downbeat();
@@ -49,10 +50,12 @@ ae.Conductor = function(bpm, timesig, downbeats, players, function_downbeat, fun
                 conductor.pausePlayers();
                 conductor.toggleTail(true);
                 conductor.playPlayers();
+                conductor.metro.stop();
 
                 //set next
                 conductor.bpm = conductor.nextBpm;
                 conductor.interval = "BPM" + conductor.bpm + " L4";
+                conductor.metro = T("interval", {interval:conductor.interval}, conductor.metroFunction);
                 conductor.timesig = conductor.nextTimesig;
                 conductor.downbeats = conductor.nextDownbeats;
                 conductor.players = conductor.nextPlayers;
@@ -63,7 +66,9 @@ ae.Conductor = function(bpm, timesig, downbeats, players, function_downbeat, fun
                 console.log("transitioned toNext");
 
                 //play new
-                conductor.playPlayers();
+                conductor.resetPlayers();
+                conductor.metro.start();
+                // conductor.playPlayers();
             }
             // conductor.playPlayers();
             // conductor.function_downbeat();
@@ -74,7 +79,10 @@ ae.Conductor = function(bpm, timesig, downbeats, players, function_downbeat, fun
             // console.log("boop");
         }
         console.log(beat);
-    });
+    // });
+    };
+
+    this.metro = T("interval", {interval: conductor.interval}, this.metroFunction);
 }
 
 ae.Conductor.prototype.start = function() {
@@ -96,6 +104,12 @@ ae.Conductor.prototype.playPlayers = function() {
 ae.Conductor.prototype.pausePlayers = function() {
     for (var i=0; i<this.players.length; i++) {
         this.players[i].pause();
+    }
+}
+
+ae.Conductor.prototype.resetPlayers = function() {
+    for (var i=0; i<this.players.length; i++) {
+        this.players[i].reset();
     }
 }
 
@@ -262,7 +276,9 @@ ae.Loop.prototype.pause = function() {
 ae.Loop.prototype.reset = function() {
     this.loop.currentTime = 0;
     this.init.currentTime = 0;
+    this.tail.currentTime = 0;
     this.initPlayed = false;
+    this.playTail = false;
     this.on();
     this.unmute();
 }
