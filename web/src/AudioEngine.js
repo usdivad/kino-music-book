@@ -45,9 +45,11 @@ ae.Conductor = function(bpm, timesig, transitionBeats, players, function_downbea
             conductor.function_downbeat();
             conductor.playPlayers(beat);
         }
-        else if (transitionBeats.indexOf(beat) >= 0) {
+        else if (conductor.transitionBeats.indexOf(beat) >= 0) {
+            console.log(beat + " is a transition beat in " + conductor.transitionBeats.toString());
             if (conductor.toNext) {
                 //stop current
+                // conductor.fadeOutPlayers(0.1, 100);
                 conductor.pausePlayers();
                 conductor.toggleTail(true);
                 conductor.playPlayers(beat);
@@ -111,12 +113,19 @@ ae.Conductor.prototype.playPlayers = function(beat) {
 ae.Conductor.prototype.pausePlayers = function() {
     for (var i=0; i<this.players.length; i++) {
         this.players[i].pause();
+        // this.players[i].fadeOut(0.1, 100, true);
     }
 }
 
 ae.Conductor.prototype.resetPlayers = function() {
     for (var i=0; i<this.players.length; i++) {
         this.players[i].reset();
+    }
+}
+
+ae.Conductor.prototype.fadeOutPlayers = function(step, interval) {
+    for (var i=0; i<this.players.length; i++) {
+        this.players[i].fadeOut(step, interval);
     }
 }
 
@@ -381,6 +390,9 @@ ae.Loop.prototype.fadeOut = function(step, interval) {
         if (loop.mul <= 0) {
             clearInterval(timer);
             console.log("fadeOut done");
+            // if (pause) {
+            //     loop.pause();
+            // }
         }
         else {
             loop.setMul(loop.mul);
