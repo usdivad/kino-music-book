@@ -41,12 +41,12 @@ ae.Conductor = function(bpm, timesig, transitionBeats, players, function_downbea
     // this.metro = T("interval", {interval: conductor.interval}, function(count) {
     this.metroFunction = function(count) {
         var beat = count % conductor.timesig;
-        if (beat == 0) {
-            conductor.function_downbeat();
-            conductor.playPlayers(beat);
-        }
-        else if (conductor.transitionBeats.indexOf(beat) >= 0) {
+
+        // Available transition beats
+        if (conductor.transitionBeats.indexOf(beat) >= 0) {
             console.log(beat + " is a transition beat in " + conductor.transitionBeats.toString());
+            
+            // Transition beat + transition state
             if (conductor.toNext) {
                 //stop current
                 // conductor.fadeOutPlayers(0.1, 100);
@@ -73,10 +73,22 @@ ae.Conductor = function(bpm, timesig, transitionBeats, players, function_downbea
                 conductor.metro.start();
                 // conductor.playPlayers();
             }
+            // Downbeat; transition beat but not transition state
+            else if (beat == 0) {
+                conductor.function_downbeat();
+                conductor.playPlayers(beat);
+            }
+
             // conductor.playPlayers();
             // conductor.function_downbeat();
             // console.log("beep");
         }
+        // Downbeat but not transition beat
+        else if (beat == 0) {
+            conductor.function_downbeat();
+            conductor.playPlayers(beat);
+        }
+        // Upbeats
         else {
             conductor.function_upbeat();
             // console.log("boop");

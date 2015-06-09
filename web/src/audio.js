@@ -12,7 +12,7 @@ var disstheme_timesig = 7*4; //7 bars * 4 beats
 var disstheme_transition_A1 = 2*4;
 var disstheme_transition_A2 = 4*4;
 var disstheme_transition_B = 5*4;
-var disstheme_transition_C = 7*4;
+var disstheme_transition_C = 0; //has to be the beat where it would have re-looped, and it'll always end at timesig-1
 var disstheme_transitionBeats = [disstheme_transition_A1, disstheme_transition_A2, disstheme_transition_B, disstheme_transition_C];
 
 
@@ -66,10 +66,10 @@ var disstheme_arr = [disstheme_violin1, disstheme_violin2, disstheme_viola, diss
 //KINOTHEME
 var kinotheme_bpm = 170;
 var kinotheme_timesig = 76;
-var kinotheme_transitionBeats = [76];
+var kinotheme_transitionBeats = [0];
 
-var kinotheme_piano = new AudioEngine.Loop(mp3dir + "kinotheme init piano.wav", mp3dir + "kinotheme loop piano.wav", [{url: mp3dir + "kinotheme tail piano.wav", beats: [76]}]);
-var kinotheme_vox = new AudioEngine.Loop(mp3dir + "kinotheme init vox.wav", mp3dir + "kinotheme init vox.wav", [{url: mp3dir + "empty.wav", beats: [76]}]);
+var kinotheme_piano = new AudioEngine.Loop(mp3dir + "kinotheme init piano.wav", mp3dir + "kinotheme loop piano.wav", [{url: mp3dir + "kinotheme tail piano.wav", beats: [0]}]);
+var kinotheme_vox = new AudioEngine.Loop(mp3dir + "kinotheme init vox.wav", mp3dir + "kinotheme init vox.wav", [{url: mp3dir + "empty.wav", beats: [0]}]);
 var kinotheme_arr = [kinotheme_piano, kinotheme_vox];
 
 // var sprite_gtr = AudioEngine.to_audio("mp3/sprite_gtr.mp3");
