@@ -76,7 +76,9 @@ var kinotheme_timesig = 76;
 var kinotheme_transitionBeats = [0];
 
 var kinotheme_piano = new AudioEngine.Loop(mp3dir + "kinotheme init piano.wav", mp3dir + "kinotheme loop piano.wav", [{url: mp3dir + "kinotheme tail piano.wav", beats: [0]}]);
-var kinotheme_vox = new AudioEngine.Loop(mp3dir + "kinotheme vox.wav", mp3dir + "kinotheme vox.wav", [{url: mp3dir + "empty.wav", beats: [0]}]);
+var kinotheme_vox = new AudioEngine.Loop(
+    mp3dir + "kinotheme vox.wav", mp3dir + "kinotheme vox.wav", [{url: mp3dir + "empty.wav", beats: [0]}],
+    0);
 var kinotheme_arr = [kinotheme_piano, kinotheme_vox];
 
 
@@ -87,7 +89,8 @@ function toKinotheme() {
     // loop_arr = kinotheme_arr;
     // loop_timesig = kinotheme_timesig;
 
-    kinotheme_vox.setMul(0);
+    // kinotheme_vox.mute();
+    // kinotheme_vox.off();
 
     conductor.nextPlayers = kinotheme_arr;
     conductor.nextBpm = kinotheme_bpm;

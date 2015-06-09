@@ -206,11 +206,12 @@ ae.Conductor.prototype.checkAllLoaded = function() {
     - activated = whether loop is "activated" or not within current cycle (on/off ctrl)
     - url_{init, loop} = URLs of init and loop audio files
 
-    - mul = amplitude
+    - defaultMul = default amplitude (for beginning of section)
+    - mul = current amplitude
 
     (- mute/unmute is similar to on/off but takes place immediately)
 */
-ae.Loop = function(init, loop, tail) {
+ae.Loop = function(init, loop, tail, defaultMul) {
     this.init = ae.to_audio(init);    
     this.loop = ae.to_audio(loop);
     // this.tail = ae.to_audio(tail);
@@ -218,14 +219,19 @@ ae.Loop = function(init, loop, tail) {
     for (var i=0; i<this.tail.length; i++) {
         this.tail[i].audio = ae.to_audio(tail[i].url);
     }
+    this.activated = true;
 
     this.initPlayed = false;
     this.playTail = false;
-    this.activated = true;
     this.url_init = init;
     this.url_loop = loop;
 
-    this.mul = 1;
+    this.defaultMul = 1;
+    if (defaultMul !== undefined) {
+        this.defaultMul = defaultMul;
+    }
+    this.mul = this.defaultMul;
+
 }
 
 //Play/pause
@@ -282,8 +288,11 @@ ae.Loop.prototype.reset = function() {
     //Settings for which audio stream to play
     this.initPlayed = false;
     this.playTail = false;
+
+    // Settings for activation and volume
     this.on();
-    this.unmute();
+    // this.unmute();
+    this.setMul(this.defaultMul);
 }
 
 //On/off activation for current cycle
