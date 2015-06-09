@@ -158,20 +158,19 @@ ae.Conductor.prototype.toggleTail = function(tf) {
 
 // Check if all player samples for this section have been loaded
 ae.Conductor.prototype.checkAllLoaded = function() {
-    console.log("--");
+    // console.log("--");
     if (this.all_loaded) {
         console.log("- already all loaded");
         return;
     }
     else {
-        console.log(this.players.length);
         // Check each player
         for (var i=0; i<this.players.length; i++) {
-            console.log("- player " + i);
+            // console.log("- player " + i);
             var loop = this.players[i];
             // Check init and loop
             if (loop.init && loop.loop && loop.init.isLoaded && loop.loop.isLoaded) {
-                console.log("- loaded both " + loop.url_init + " and " + loop.url_loop);
+                // console.log("- loaded both " + loop.url_init + " and " + loop.url_loop);
                 
                 // Check tail
                 for (var j=0; j<loop.tail.length; j++) {
@@ -181,10 +180,10 @@ ae.Conductor.prototype.checkAllLoaded = function() {
                         return;
                     }
                     else {
-                        console.log("- loaded " + loop.tail[j].url);
+                        // console.log("- loaded " + loop.tail[j].url);
                     }
                 }
-                console.log("- finished checking init,loop, and tail");
+                // console.log("- finished checking init,loop, and tail");
             }
             else {
                 console.log("- haven't loaded one of either " + loop.url_init + " or " + loop.url_loop);
@@ -196,7 +195,7 @@ ae.Conductor.prototype.checkAllLoaded = function() {
         // this.all_loaded = true;
         // return;
     }
-    console.log("--");
+    // console.log("--");
 }
 
 
