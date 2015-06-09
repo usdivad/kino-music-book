@@ -2,18 +2,19 @@ var AudioEngine = (function(ae) {
 /*
     Conductor object. A glorified Metronome.
 
-    Vars:
+    Input vars:
     - bpm = beats per minute (tempo)
     - timesig = time signature; currently includes multiple bars, e.g. 4 bars of 13/4 makes a timesig of 13*4=52
     - players = an array of loops
     - transitionBeats = beats that are allowed to transition to another section
-    - all_loaded = whether or not all players' Loops have been loaded
-    - next{Bpm, Interval...} = the equivalent vars to be set for the next section
 
     - function_downbeat = function that is called on beat 1 of the bar
     - function_upbeat = function that is called on every other beat of the bar
     - function_stop = function that is called when metronome is stopped
 
+    Default vars:
+    - all_loaded = whether or not all players' Loops have been loaded
+    - next{Bpm, Interval...} = the equivalent vars to be set for the next section
     - metroFunction = function that defines how the conductor's metronome treats beats
     - metro = the metronome itself
 */
@@ -30,13 +31,11 @@ ae.Conductor = function(bpm, timesig, transitionBeats, players, function_downbea
     console.log(this.bpm);
     
     this.toNext = false;
-    this.nextBpm = this.bpm
+    this.nextBpm = this.bpm;
     this.nextInterval = this.interval;
     this.nextTimesig = this.timesig;
     this.nextTransitionBeats = this.transitionBeats;
     this.nextPlayers = this.players;
-
-    // this.toNextSection = false;
 
     //functions
     this.function_stop = function_stop;
@@ -54,8 +53,8 @@ ae.Conductor = function(bpm, timesig, transitionBeats, players, function_downbea
             // Transition beat + transition state
             if (conductor.toNext) {
                 //stop current
-                // conductor.fadeOutPlayers(0.1, 100);
                 conductor.pausePlayers();
+                // conductor.fadeOutPlayers(0.1, 100);
                 conductor.toggleTail(true);
                 conductor.playPlayers(beat);
                 conductor.metro.stop();
@@ -83,9 +82,6 @@ ae.Conductor = function(bpm, timesig, transitionBeats, players, function_downbea
                 conductor.function_downbeat();
                 conductor.playPlayers(beat);
             }
-
-            // conductor.playPlayers();
-            // conductor.function_downbeat();
             // console.log("beep");
         }
         // Downbeat but not transition beat
@@ -99,7 +95,6 @@ ae.Conductor = function(bpm, timesig, transitionBeats, players, function_downbea
             // console.log("boop");
         }
         console.log(beat);
-    // });
     };
 
     this.metro = T("interval", {interval: conductor.interval}, this.metroFunction);
@@ -160,10 +155,6 @@ ae.Conductor.prototype.toggleTail = function(tf) {
     }
 }
 
-// ae.Conductor.prototype.setTimesig = function(timesig) {
-
-// }
-
 // Check if all player samples for this section have been loaded
 ae.Conductor.prototype.checkAllLoaded = function() {
     if (this.all_loaded) {
@@ -194,93 +185,13 @@ ae.Conductor.prototype.checkAllLoaded = function() {
 }
 
 
-// Conductor.prototype.setFunctionDownbeat = function(fn) {
-//     this.function_downbeat = fn;
-
-//     var function_downbeat = this.function_downbeat;
-//     var function_upbeat = this.function_upbeat;
-//     var function_stop = this.function_stop;
-//     var timesig = this.timesig;
-
-//     console.log("resetting metro");
-//     function_stop();
-//     this.metro.stop();
-//     this.metro = T("interval", {interval: this.interval}, function(count) {
-//         if (count % timesig == 0) {
-//             function_downbeat();
-//             // console.log("zero");
-//         }
-//         else {
-//             function_upbeat();
-//         }
-//         console.log(count % timesig);
-//     });
-//     this.metro.start();
-// }
-
-/*
-    LoopMaster object handles synchronization of loops for a section
-    (the loops themselves exist outside of the LoopMaster object)
-*/
-
-// //Constructor
-// ae.LoopMaster = function(loops) {
-//     this.loops = loops;
-//     this.master = T("+", loops);
-//     this.all_loaded = false;
-// }
-
-// //Start and set all loop offsets to 0
-// ae.LoopMaster.prototype.start = function() {
-//     this.checkAllLoaded();
-//     if (this.all_loaded) {
-//         for (var i=0; i<this.loops.length; i++) {
-//             var loop = this.loops[i];
-//             loop.currentTime = 0;
-//         }
-//         this.master.play();
-//     }
-//     else {
-//         console.log("loops not yet all loaded; try again later~");
-//     }
-// }
-
-// //Stop and set all loop offsets to 0
-// ae.LoopMaster.prototype.stop = function() {
-//     this.master.pause();
-//     for (var i=0; i<this.loops.length; i++) {
-//         var loop = this.loops[i];
-//         loop.currentTime = 0;
-//     }
-// }
-
-// //Check if all tracks are loaded
-// ae.LoopMaster.prototype.checkAllLoaded = function() {
-//     if (this.all_loaded) {
-//         return true;
-//     }
-//     else {
-//         var all_loaded = true;
-//         for (var i=0; i<this.loops.length; i++) {
-//             var loop = this.loops[i];
-//             if (!loop.isLoaded) {
-//                 console.log(loop);
-//                 all_loaded = false;
-//                 break;
-//             }
-//         }
-//         this.all_loaded = all_loaded;
-//         return all_loaded;
-//     }
-// }
-
 /*
     Loop object.
 
     Either constructed with an init sound + loop or just loop.
     Note that the loop audio may have a tail as well
 
-    Vars:
+    Input vars:
     - init = the initial audio (first play)
     - loop = the looped audio
     - tail = an array of {url, audio, beats} objects:
@@ -288,6 +199,7 @@ ae.Conductor.prototype.checkAllLoaded = function() {
         - audio: the T("audio")
         - beats: an array of valid beats for that audio to be played (based on transitionBeats)
     
+    Default vars:
     - initPlayed = whether init has been played yet
     - playTail = whether tail should be played
     
@@ -296,7 +208,7 @@ ae.Conductor.prototype.checkAllLoaded = function() {
 
     - mul = amplitude
 
-    - mute/unmute is similar to on/off but takes place immediately
+    (- mute/unmute is similar to on/off but takes place immediately)
 */
 ae.Loop = function(init, loop, tail) {
     this.init = ae.to_audio(init);    
@@ -314,17 +226,6 @@ ae.Loop = function(init, loop, tail) {
     this.url_loop = loop;
 
     this.mul = 1;
-
-    // this.loopPlaying = false;
-
-    // //safeguard; use loop as init if no init available
-    // if (init == undefined) {
-    //     this.init = this.loop;
-    //     this.url_init = loop;
-    // }
-    // else {
-    //     this.init = ae.to_audio(init);
-    // }
 }
 
 //Play/pause
@@ -333,9 +234,6 @@ ae.Loop.prototype.play = function(beat) {
         return;
     }
     if (this.playTail) {
-        // this.tail.play();
-        // this.tail.bang();
-
         // Determine which tail sample to play
         for (var i=0; i<this.tail.length; i++) {
             tail = this.tail[i];
@@ -351,8 +249,6 @@ ae.Loop.prototype.play = function(beat) {
         // this.activated = false;
     }
     else if (this.initPlayed) {
-        //this.init.pause();
-        //this.init.currentTime = 0;
         this.loop.play();
         this.loop.bang();
         console.log("playing loop: " + this.url_loop);
@@ -398,7 +294,7 @@ ae.Loop.prototype.off = function() {
     this.activated = false;
 }
 
-//Volume control
+//Volume control (immediate effect)
 ae.Loop.prototype.setMul = function(mul) {
     this.loop.mul = mul;
     this.init.mul = mul;
@@ -421,7 +317,7 @@ ae.Loop.prototype.unmute = function() {
     this.setMul(1);
 }
 
-// Fade in/out
+// Fade in/out over time
 ae.Loop.prototype.fadeOut = function(step, interval) {
     var loop = this;
     var timer = setInterval(function() {
