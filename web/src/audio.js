@@ -11,10 +11,52 @@ var disstheme_bpm = 80.75;
 var disstheme_timesig = 7*4; //7 bars * 4 beats
 var disstheme_transitionBeats = [2*4, 4*4, 6*4, 7*4];
 
-var disstheme_violin1 = new AudioEngine.Loop(mp3dir + "disstheme init violin1.wav", mp3dir + "disstheme loop violin1.wav", mp3dir + "disstheme tailC violin1.wav");
-var disstheme_violin2 = new AudioEngine.Loop(mp3dir + "disstheme init violin2.wav", mp3dir + "disstheme loop violin2.wav", mp3dir + "disstheme tailC violin2.wav");
-var disstheme_viola = new AudioEngine.Loop(mp3dir + "disstheme init viola.wav", mp3dir + "disstheme loop viola.wav", mp3dir + "disstheme tailC viola.wav");
-var disstheme_cello = new AudioEngine.Loop(mp3dir + "disstheme init cello.wav", mp3dir + "disstheme loop cello.wav", mp3dir + "disstheme tailC cello.wav");
+// var disstheme_violin1 = new AudioEngine.Loop(mp3dir + "disstheme init violin1.wav", mp3dir + "disstheme loop violin1.wav", mp3dir + "disstheme tailC violin1.wav");
+// var disstheme_violin2 = new AudioEngine.Loop(mp3dir + "disstheme init violin2.wav", mp3dir + "disstheme loop violin2.wav", mp3dir + "disstheme tailC violin2.wav");
+// var disstheme_viola = new AudioEngine.Loop(mp3dir + "disstheme init viola.wav", mp3dir + "disstheme loop viola.wav", mp3dir + "disstheme tailC viola.wav");
+// var disstheme_cello = new AudioEngine.Loop(mp3dir + "disstheme init cello.wav", mp3dir + "disstheme loop cello.wav", mp3dir + "disstheme tailC cello.wav");
+
+
+var disstheme_violin1 = new AudioEngine.Loop(
+    mp3dir + "disstheme init violin1.wav",
+    mp3dir + "disstheme loop violin1.wav",
+    [
+        {beat: 2*4, url: mp3dir + "disstheme tailA violin1.wav"},
+        {beat: 4*4, url: mp3dir + "disstheme tailA violin1.wav"},
+        {beat: 6*4, url: mp3dir + "disstheme tailB violin1.wav"},
+        {beat: 7*4, url: mp3dir + "disstheme tailC violin1.wav"}
+    ]
+);
+var disstheme_violin2 = new AudioEngine.Loop(
+    mp3dir + "disstheme init violin2.wav",
+    mp3dir + "disstheme loop violin2.wav",
+    [
+        {beat: 2*4, url: mp3dir + "disstheme tailA violin2.wav"},
+        {beat: 4*4, url: mp3dir + "disstheme tailA violin2.wav"},
+        {beat: 6*4, url: mp3dir + "disstheme tailB violin2.wav"},
+        {beat: 7*4, url: mp3dir + "disstheme tailC violin2.wav"}
+    ]
+);
+var disstheme_viola = new AudioEngine.Loop(
+    mp3dir + "disstheme init viola.wav",
+    mp3dir + "disstheme loop viola.wav",
+    [
+        {beat: 2*4, url: mp3dir + "disstheme tailA viola.wav"},
+        {beat: 4*4, url: mp3dir + "disstheme tailA viola.wav"},
+        {beat: 6*4, url: mp3dir + "disstheme tailB viola.wav"},
+        {beat: 7*4, url: mp3dir + "disstheme tailC viola.wav"}
+    ]
+);
+var disstheme_cello = new AudioEngine.Loop(
+    mp3dir + "disstheme init cello.wav",
+    mp3dir + "disstheme loop cello.wav",
+    [
+        {beat: 2*4, url: mp3dir + "disstheme tailA cello.wav"},
+        {beat: 4*4, url: mp3dir + "disstheme tailA cello.wav"},
+        {beat: 6*4, url: mp3dir + "disstheme tailB cello.wav"},
+        {beat: 7*4, url: mp3dir + "disstheme tailC cello.wav"}
+    ]
+);
 
 var disstheme_arr = [disstheme_violin1, disstheme_violin2, disstheme_viola, disstheme_cello];
 
@@ -23,8 +65,8 @@ var kinotheme_bpm = 170;
 var kinotheme_timesig = 76;
 var kinotheme_transitionBeats = [0];
 
-var kinotheme_piano = new AudioEngine.Loop(mp3dir + "kinotheme init piano.wav", mp3dir + "kinotheme loop piano.wav", mp3dir + "kinotheme tail piano.wav");
-var kinotheme_vox = new AudioEngine.Loop(mp3dir + "kinotheme init vox.wav");
+var kinotheme_piano = new AudioEngine.Loop(mp3dir + "kinotheme init piano.wav", mp3dir + "kinotheme loop piano.wav", [{beat: 76, url: mp3dir + "kinotheme tail piano.wav"}]);
+var kinotheme_vox = new AudioEngine.Loop(mp3dir + "kinotheme init vox.wav", mp3dir + "kinotheme init vox.wav", [{beat: 76, url: mp3dir + "kinotheme init vox.wav"}]);
 var kinotheme_arr = [kinotheme_piano, kinotheme_vox];
 
 // var sprite_gtr = AudioEngine.to_audio("mp3/sprite_gtr.mp3");

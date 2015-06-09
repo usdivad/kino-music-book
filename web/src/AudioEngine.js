@@ -138,8 +138,17 @@ ae.Conductor.prototype.checkAllLoaded = function() {
         var all_loaded = true;
         for (var i=0; i<this.players.length; i++) {
             var loop = this.players[i];
-            if (!(loop.init.isLoaded && loop.loop.isLoaded && loop.tail.isLoaded)) {
-                console.log(loop);
+            if (loop.init.isLoaded && loop.loop.isLoaded) {
+                for (var i=0; i<loop.tail.length; i++) {
+                    if (!(loop.tail[i].audio && loop.tail[i].audio.isLoaded)) {
+                        console.log("haven't loaded " + loop.tail[i].url);
+                        all_loaded = false;
+                        return all_loaded;
+                    }
+                }
+            }
+            else {
+                console.log("haven't loaded either " + loop.url_init + " or " + loop.url_loop);
                 all_loaded = false;
                 return all_loaded;
             }
@@ -248,13 +257,18 @@ ae.Conductor.prototype.checkAllLoaded = function() {
 ae.Loop = function(init, loop, tail) {
     this.init = ae.to_audio(init);    
     this.loop = ae.to_audio(loop);
-    this.tail = ae.to_audio(tail);
+    // this.tail = ae.to_audio(tail);
+    this.tail = tail;
+    for (var i=0; i<this.tail.length; i++) {
+        this.tail[i].audio = ae.to_audio(tail[i].url);
+    }
+
     this.initPlayed = false;
     this.playTail = false;
     this.activated = true;
     this.url_init = init;
     this.url_loop = loop;
-    this.url_tail = tail;
+    // this.url_tail = tail;
     this.mul = 1;
     // this.loopPlaying = false;
 
@@ -269,14 +283,25 @@ ae.Loop = function(init, loop, tail) {
 }
 
 //Play/pause
-ae.Loop.prototype.play = function() {
+ae.Loop.prototype.play = function(beat) {
     if (!this.activated) {
         return;
     }
     if (this.playTail) {
-        this.tail.play();
-        this.tail.bang();
-        console.log("playing tail: " + this.url_tail);
+        // this.tail.play();
+        // this.tail.bang();
+
+        for (var i=0; i<this.tail.length; i++) {
+            tail = this.tail[i];
+            if (tail.beat == beat) {
+                tail.audio.play();
+                tail.audio.bang();
+                console.log("playing tail: " + tail.url + " on beat " + beat);
+                return;
+            }
+        }
+        console.log("invalid beat " + beat);
+
         // this.activated = false;
     }
     else if (this.initPlayed) {
@@ -304,7 +329,9 @@ ae.Loop.prototype.pause = function() {
 ae.Loop.prototype.reset = function() {
     this.loop.currentTime = 0;
     this.init.currentTime = 0;
-    this.tail.currentTime = 0;
+    for (var i=0; i<this.tail.length; i++) {
+        this.tail[i].audio.currentTime = 0;
+    }
     this.initPlayed = false;
     this.playTail = false;
     this.on();
@@ -323,7 +350,9 @@ ae.Loop.prototype.off = function() {
 ae.Loop.prototype.setMul = function(mul) {
     this.loop.mul = mul;
     this.init.mul = mul;
-    this.tail.mul = mul;
+    for (var i=0; i<this.tail.length; i++) {
+        this.tail[i].audio.mul = mul;
+    }
     this.mul = mul;
 }
 ae.Loop.prototype.mute = function() {
