@@ -122,9 +122,9 @@ var conductor = new AudioEngine.Conductor(disstheme_bpm, loop_timesig, disstheme
 
 
 // Tests: checkAllLoaded
-// var checker = setInterval(function() {
-//     conductor.checkAllLoaded();
-// }, 1000);
+var checker = setInterval(function() {
+    conductor.checkAllLoaded();
+}, 100);
 
 // // For testing; uncomment for production
 // })();

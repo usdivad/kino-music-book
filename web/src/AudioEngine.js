@@ -174,26 +174,27 @@ ae.Conductor.prototype.checkAllLoaded = function() {
                 console.log("- loaded both " + loop.url_init + " and " + loop.url_loop);
                 
                 // Check tail
-                for (var i=0; i<loop.tail.length; i++) {
-                    if (!(loop.tail[i].audio && loop.tail[i].audio.isLoaded)) {
-                        console.log("- haven't loaded " + loop.tail[i].url);
+                for (var j=0; j<loop.tail.length; j++) {
+                    if (!(loop.tail[j].audio && loop.tail[j].audio.isLoaded)) {
+                        console.log("- haven't loaded " + loop.tail[j].url);
                         this.all_loaded = false;
                         return;
                     }
                     else {
-                        console.log("- loaded " + loop.tail[i].url);
+                        console.log("- loaded " + loop.tail[j].url);
                     }
                 }
+                console.log("- finished checking init,loop, and tail");
             }
             else {
-                console.log("- haven't loaded either " + loop.url_init + " or " + loop.url_loop);
+                console.log("- haven't loaded one of either " + loop.url_init + " or " + loop.url_loop);
                 this.all_loaded = false;
                 return;
             }
         }
         console.log("- all loaded");
-        this.all_loaded = true;
-        return;
+        // this.all_loaded = true;
+        // return;
     }
     console.log("--");
 }
