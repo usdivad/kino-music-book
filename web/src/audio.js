@@ -3,25 +3,28 @@
 
 //GLOB
 // var bpm = btom(232);
-var disstheme_bpm = 80.75;
-var disstheme_timesig = 7*4; //7 bars * 4 beats
-var disstheme_downbeats = [0, 2*4, 4*4, 6*4, 7*4];
-var kinotheme_bpm = 170;
-var kinotheme_timesig = 76;
-var kinotheme_downbeats = [0];
 var mp3dir = "../layers%20Project/stems/"
 
-//DISSTHEME_STRINGS
-var disstheme_violin1 = new AudioEngine.Loop(mp3dir + "disstheme_strings head violin1.wav", mp3dir + "disstheme_strings loop violin1.wav", mp3dir + "disstheme_strings tail violin1.wav");
-var disstheme_violin2 = new AudioEngine.Loop(mp3dir + "disstheme_strings head violin2.wav", mp3dir + "disstheme_strings loop violin2.wav", mp3dir + "disstheme_strings tail violin2.wav");
-var disstheme_viola = new AudioEngine.Loop(mp3dir + "disstheme_strings head viola.wav", mp3dir + "disstheme_strings loop viola.wav", mp3dir + "disstheme_strings tail viola.wav");
-var disstheme_cello = new AudioEngine.Loop(mp3dir + "disstheme_strings head cello.wav", mp3dir + "disstheme_strings loop cello.wav", mp3dir + "disstheme_strings tail cello.wav");
+
+//DISSTHEME
+var disstheme_bpm = 80.75;
+var disstheme_timesig = 7*4; //7 bars * 4 beats
+var disstheme_transitionBeats = [2*4, 4*4, 6*4, 7*4];
+
+var disstheme_violin1 = new AudioEngine.Loop(mp3dir + "disstheme init violin1.wav", mp3dir + "disstheme loop violin1.wav", mp3dir + "disstheme tailC violin1.wav");
+var disstheme_violin2 = new AudioEngine.Loop(mp3dir + "disstheme init violin2.wav", mp3dir + "disstheme loop violin2.wav", mp3dir + "disstheme tailC violin2.wav");
+var disstheme_viola = new AudioEngine.Loop(mp3dir + "disstheme init viola.wav", mp3dir + "disstheme loop viola.wav", mp3dir + "disstheme tailC viola.wav");
+var disstheme_cello = new AudioEngine.Loop(mp3dir + "disstheme init cello.wav", mp3dir + "disstheme loop cello.wav", mp3dir + "disstheme tailC cello.wav");
 
 var disstheme_arr = [disstheme_violin1, disstheme_violin2, disstheme_viola, disstheme_cello];
 
 //KINOTHEME
-var kinotheme_piano = new AudioEngine.Loop(mp3dir + "kinotheme head piano.wav", mp3dir + "kinotheme loop piano.wav", mp3dir + "kinotheme tail piano.wav");
-var kinotheme_vox = new AudioEngine.Loop(mp3dir + "kinotheme head vox.wav");
+var kinotheme_bpm = 170;
+var kinotheme_timesig = 76;
+var kinotheme_transitionBeats = [0];
+
+var kinotheme_piano = new AudioEngine.Loop(mp3dir + "kinotheme init piano.wav", mp3dir + "kinotheme loop piano.wav", mp3dir + "kinotheme tail piano.wav");
+var kinotheme_vox = new AudioEngine.Loop(mp3dir + "kinotheme init vox.wav");
 var kinotheme_arr = [kinotheme_piano, kinotheme_vox];
 
 // var sprite_gtr = AudioEngine.to_audio("mp3/sprite_gtr.mp3");
@@ -31,7 +34,7 @@ var kinotheme_arr = [kinotheme_piano, kinotheme_vox];
 var loop_arr = disstheme_arr;
 var loop_timesig = disstheme_timesig;
 
-var conductor = new AudioEngine.Conductor(disstheme_bpm, loop_timesig, disstheme_downbeats, loop_arr, function() {
+var conductor = new AudioEngine.Conductor(disstheme_bpm, loop_timesig, disstheme_transitionBeats, loop_arr, function() {
     console.log("START");
     // pauseLoops(loop_arr);
     // playLoops(loop_arr);
@@ -54,7 +57,7 @@ function toKinotheme() {
     conductor.nextPlayers = kinotheme_arr;
     conductor.nextBpm = kinotheme_bpm;
     conductor.nextTimesig = kinotheme_timesig;
-    conductor.nextDownbeats = kinotheme_downbeats;
+    conductor.nextTransitionBeats = kinotheme_transitionBeats;
     conductor.toNext = true;
     // playLoops(loop_arr);
 
@@ -64,7 +67,7 @@ function toDisstheme() {
     conductor.nextPlayers = disstheme_arr;
     conductor.nextBpm = disstheme_bpm;
     conductor.nextTimesig = disstheme_timesig;
-    conductor.nextDownbeats = disstheme_downbeats;
+    conductor.nextTransitionBeats = disstheme_transitionBeats;
     conductor.toNext = true;
 }
 

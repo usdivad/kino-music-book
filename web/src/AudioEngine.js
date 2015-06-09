@@ -12,13 +12,13 @@ var AudioEngine = (function(ae) {
 */
 
 //Constructor
-ae.Conductor = function(bpm, timesig, downbeats, players, function_downbeat, function_upbeat, function_stop) {
+ae.Conductor = function(bpm, timesig, transitionBeats, players, function_downbeat, function_upbeat, function_stop) {
     var conductor = this;
     this.bpm = bpm;
     this.interval = "BPM" + this.bpm + " L4";
     this.timesig = timesig;
     this.players = players;
-    this.downbeats = downbeats;
+    this.transitionBeats = transitionBeats;
     this.all_loaded = false;
     console.log(this.bpm);
     
@@ -26,7 +26,7 @@ ae.Conductor = function(bpm, timesig, downbeats, players, function_downbeat, fun
     this.nextBpm = this.bpm
     this.nextInterval = this.interval;
     this.nextTimesig = this.timesig;
-    this.nextDownbeats = this.downbeats;
+    this.nextTransitionBeats = this.transitionBeats;
     this.nextPlayers = this.players;
 
     // this.toNextSection = false;
@@ -45,7 +45,7 @@ ae.Conductor = function(bpm, timesig, downbeats, players, function_downbeat, fun
             conductor.function_downbeat();
             conductor.playPlayers();
         }
-        else if (downbeats.indexOf(beat) >= 0) {
+        else if (transitionBeats.indexOf(beat) >= 0) {
             if (conductor.toNext) {
                 //stop current
                 conductor.pausePlayers();
@@ -58,7 +58,7 @@ ae.Conductor = function(bpm, timesig, downbeats, players, function_downbeat, fun
                 conductor.interval = "BPM" + conductor.bpm + " L4";
                 conductor.metro = T("interval", {interval:conductor.interval}, conductor.metroFunction);
                 conductor.timesig = conductor.nextTimesig;
-                conductor.downbeats = conductor.nextDownbeats;
+                conductor.transitionBeats = conductor.nextTransitionBeats;
                 conductor.players = conductor.nextPlayers;
 
                 //reset globs
