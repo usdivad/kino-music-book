@@ -43,14 +43,14 @@ ae.Conductor = function(bpm, timesig, transitionBeats, players, function_downbea
         var beat = count % conductor.timesig;
         if (beat == 0) {
             conductor.function_downbeat();
-            conductor.playPlayers();
+            conductor.playPlayers(beat);
         }
         else if (transitionBeats.indexOf(beat) >= 0) {
             if (conductor.toNext) {
                 //stop current
                 conductor.pausePlayers();
                 conductor.toggleTail(true);
-                conductor.playPlayers();
+                conductor.playPlayers(beat);
                 conductor.metro.stop();
 
                 //set next
@@ -102,9 +102,9 @@ ae.Conductor.prototype.stop = function() {
     this.function_stop();
 }
 
-ae.Conductor.prototype.playPlayers = function() {
+ae.Conductor.prototype.playPlayers = function(beat) {
     for (var i=0; i<this.players.length; i++) {
-        this.players[i].play();
+        this.players[i].play(beat);
     }
 }
 
@@ -248,7 +248,9 @@ ae.Conductor.prototype.checkAllLoaded = function() {
     Vars:
     - init = the initial audio (first play)
     - loop = the looped audio
-    - tail = the tail audio (last play)
+    - tail = an array of {url, audio, beats} objects:
+        - audio: the T("audio")
+        - beats: an array of valid beats for that audio to be played (based on transitionBeats)
     - initPlayed = whether init has been played yet
     - activated = whether loop is "activated" or not within current cycle (on/off ctrl)
 
@@ -291,9 +293,10 @@ ae.Loop.prototype.play = function(beat) {
         // this.tail.play();
         // this.tail.bang();
 
+        // Determine which tail sample to play
         for (var i=0; i<this.tail.length; i++) {
             tail = this.tail[i];
-            if (tail.beat == beat) {
+            if (tail.beats.indexOf(beat) >= 0) {
                 tail.audio.play();
                 tail.audio.bang();
                 console.log("playing tail: " + tail.url + " on beat " + beat);
@@ -322,6 +325,9 @@ ae.Loop.prototype.play = function(beat) {
 ae.Loop.prototype.pause = function() {
     this.loop.pause();
     this.init.pause();
+    for (var i=0; i<this.tail.length; i++) {
+        this.tail[i].audio.pause();
+    }
     this.initPlayed = false;
 }
 
