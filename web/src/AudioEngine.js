@@ -105,6 +105,7 @@ ae.Conductor.prototype.start = function() {
     // this.playPlayers();
     this.checkAllLoaded();
     if (this.all_loaded) {
+        this.resetPlayers();
         this.metro.start();
     }
     else {
@@ -157,31 +158,44 @@ ae.Conductor.prototype.toggleTail = function(tf) {
 
 // Check if all player samples for this section have been loaded
 ae.Conductor.prototype.checkAllLoaded = function() {
+    console.log("--");
     if (this.all_loaded) {
-        return true;
+        console.log("- already all loaded");
+        return;
     }
     else {
-        var all_loaded = true;
+        console.log(this.players.length);
+        // Check each player
         for (var i=0; i<this.players.length; i++) {
+            console.log("- player " + i);
             var loop = this.players[i];
-            if (loop.init.isLoaded && loop.loop.isLoaded) {
+            // Check init and loop
+            if (loop.init && loop.loop && loop.init.isLoaded && loop.loop.isLoaded) {
+                console.log("- loaded both " + loop.url_init + " and " + loop.url_loop);
+                
+                // Check tail
                 for (var i=0; i<loop.tail.length; i++) {
                     if (!(loop.tail[i].audio && loop.tail[i].audio.isLoaded)) {
-                        console.log("haven't loaded " + loop.tail[i].url);
-                        all_loaded = false;
-                        return all_loaded;
+                        console.log("- haven't loaded " + loop.tail[i].url);
+                        this.all_loaded = false;
+                        return;
+                    }
+                    else {
+                        console.log("- loaded " + loop.tail[i].url);
                     }
                 }
             }
             else {
-                console.log("haven't loaded either " + loop.url_init + " or " + loop.url_loop);
-                all_loaded = false;
-                return all_loaded;
+                console.log("- haven't loaded either " + loop.url_init + " or " + loop.url_loop);
+                this.all_loaded = false;
+                return;
             }
         }
-        this.all_loaded = all_loaded;
-        return all_loaded;
+        console.log("- all loaded");
+        this.all_loaded = true;
+        return;
     }
+    console.log("--");
 }
 
 
