@@ -55,9 +55,9 @@ ae.Conductor = function(bpm, timesig, transitionBeats, players, function_downbea
             if (conductor.toNext) {
                 // //stop current
                 // conductor.pausePlayers();
-                // // conductor.fadeOutPlayers(0.1, 100);
+                conductor.fadeOutPlayers(0.1, 10);
                 // conductor.setTailPlayers(true);
-                // conductor.playPlayers(beat);
+                conductor.playPlayers(beat);
                 // conductor.metro.stop();
 
                 //set next
@@ -76,11 +76,14 @@ ae.Conductor = function(bpm, timesig, transitionBeats, players, function_downbea
 
                 //play new
                 // conductor.metro.start();
-                // conductor.playPlayers();
+                conductor.playPlayers();
             }
             // Transition beat + tail state
             else if (conductor.toTail) {
+                console.log("toTail is true");
                 conductor.setTailPlayers(true);
+                conductor.toNext = true;
+                // conductor.fadeOutPlayers(0.1, 100);
             }
             // Downbeat; transition beat but not transition state
             else if (beat == 0) {
@@ -267,6 +270,7 @@ ae.Loop.prototype.play = function(beat) {
                 tail.audio.bang();
                 console.log("playing tail: " + tail.url + " on beat " + beat);
                 this.activated = false;
+                console.log("deactivated");
                 return;
             }
         }
@@ -327,9 +331,9 @@ ae.Loop.prototype.off = function() {
 ae.Loop.prototype.setMul = function(mul) {
     this.loop.mul = mul;
     this.init.mul = mul;
-    for (var i=0; i<this.tail.length; i++) {
-        this.tail[i].audio.mul = mul;
-    }
+    // for (var i=0; i<this.tail.length; i++) {
+    //     this.tail[i].audio.mul = mul;
+    // }
     this.mul = mul;
 }
 ae.Loop.prototype.mute = function() {
