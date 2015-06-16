@@ -31,6 +31,7 @@ ae.Conductor = function(bpm, timesig, transitionBeats, players, function_downbea
     console.log(this.bpm);
     
     this.toNext = false;
+    this.toTail = false;
     this.nextBpm = this.bpm;
     this.nextInterval = this.interval;
     this.nextTimesig = this.timesig;
@@ -52,12 +53,12 @@ ae.Conductor = function(bpm, timesig, transitionBeats, players, function_downbea
             
             // Transition beat + transition state
             if (conductor.toNext) {
-                //stop current
-                conductor.pausePlayers();
-                // conductor.fadeOutPlayers(0.1, 100);
-                conductor.toggleTail(true);
-                conductor.playPlayers(beat);
-                conductor.metro.stop();
+                // //stop current
+                // conductor.pausePlayers();
+                // // conductor.fadeOutPlayers(0.1, 100);
+                // conductor.setTailPlayers(true);
+                // conductor.playPlayers(beat);
+                // conductor.metro.stop();
 
                 //set next
                 conductor.bpm = conductor.nextBpm;
@@ -74,8 +75,12 @@ ae.Conductor = function(bpm, timesig, transitionBeats, players, function_downbea
                 conductor.resetPlayers();
 
                 //play new
-                conductor.metro.start();
+                // conductor.metro.start();
                 // conductor.playPlayers();
+            }
+            // Transition beat + tail state
+            else if (conductor.toTail) {
+                conductor.setTailPlayers(true);
             }
             // Downbeat; transition beat but not transition state
             else if (beat == 0) {
@@ -150,7 +155,7 @@ ae.Conductor.prototype.fadeOutPlayers = function(step, interval) {
 }
 
 // Determine whether players' tails should be played
-ae.Conductor.prototype.toggleTail = function(tf) {
+ae.Conductor.prototype.setTailPlayers = function(tf) {
     for (var i=0; i<this.players.length; i++) {
         this.players[i].playTail = tf;
     }
@@ -192,7 +197,7 @@ ae.Conductor.prototype.checkAllLoaded = function() {
             }
         }
         console.log("- all loaded");
-        // this.all_loaded = true;
+        this.all_loaded = true;
         // return;
     }
     // console.log("--");
@@ -261,6 +266,7 @@ ae.Loop.prototype.play = function(beat) {
                 tail.audio.play();
                 tail.audio.bang();
                 console.log("playing tail: " + tail.url + " on beat " + beat);
+                this.activated = false;
                 return;
             }
         }

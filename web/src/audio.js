@@ -65,7 +65,8 @@ function toDisstheme() {
     conductor.nextBpm = disstheme_bpm;
     conductor.nextTimesig = disstheme_timesig;
     conductor.nextTransitionBeats = disstheme_transitionBeats;
-    conductor.toNext = true;
+    // conductor.toNext = true;
+    conductor.toTail = true;
 }
 
 /*
@@ -96,7 +97,9 @@ function toKinotheme() {
     conductor.nextBpm = kinotheme_bpm;
     conductor.nextTimesig = kinotheme_timesig;
     conductor.nextTransitionBeats = kinotheme_transitionBeats;
-    conductor.toNext = true;
+    // conductor.toNext = true;
+    conductor.toTail = true;
+
     // playLoops(loop_arr);
 }
 
