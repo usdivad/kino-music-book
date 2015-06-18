@@ -45,7 +45,7 @@ var disstheme_viola = new AudioEngine.Loop(
         {url: mp3dir + "disstheme tailA viola.wav", beats: [disstheme_transition_A1, disstheme_transition_A2]},
         {url: mp3dir + "disstheme tailB viola.wav", beats: [disstheme_transition_B]},
         {url: mp3dir + "disstheme tailC viola.wav", beats: [disstheme_transition_C]}
-    ], 0
+    ], 1
 );
 var disstheme_cello = new AudioEngine.Loop(
     mp3dir + "disstheme init cello.wav",
@@ -54,7 +54,7 @@ var disstheme_cello = new AudioEngine.Loop(
         {url: mp3dir + "disstheme tailA cello.wav", beats: [disstheme_transition_A1, disstheme_transition_A2]},
         {url: mp3dir + "disstheme tailB cello.wav", beats: [disstheme_transition_B]},
         {url: mp3dir + "disstheme tailC cello.wav", beats: [disstheme_transition_C]}
-    ], 0
+    ], 1
 );
 
 var disstheme_arr = [disstheme_violin1, disstheme_violin2, disstheme_viola, disstheme_cello];
@@ -65,8 +65,8 @@ function toDisstheme() {
     conductor.nextBpm = disstheme_bpm;
     conductor.nextTimesig = disstheme_timesig;
     conductor.nextTransitionBeats = disstheme_transitionBeats;
-    // conductor.toNext = true;
-    conductor.toTail = true;
+    conductor.toNext = true;
+    // conductor.toTail = true;
 }
 
 /*
@@ -74,7 +74,7 @@ function toDisstheme() {
 */
 var kinotheme_bpm = 170;
 var kinotheme_timesig = 76;
-var kinotheme_transitionBeats = [0];
+var kinotheme_transitionBeats = [0,10,20,30,40,50,60,70];
 
 var kinotheme_piano = new AudioEngine.Loop(mp3dir + "kinotheme init piano.wav", mp3dir + "kinotheme loop piano.wav", [{url: mp3dir + "kinotheme tail piano.wav", beats: [0]}]);
 var kinotheme_vox = new AudioEngine.Loop(
@@ -97,8 +97,8 @@ function toKinotheme() {
     conductor.nextBpm = kinotheme_bpm;
     conductor.nextTimesig = kinotheme_timesig;
     conductor.nextTransitionBeats = kinotheme_transitionBeats;
-    // conductor.toNext = true;
-    conductor.toTail = true;
+    conductor.toNext = true;
+    // conductor.toTail = true;
 
     // playLoops(loop_arr);
 }

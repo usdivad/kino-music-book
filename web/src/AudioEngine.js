@@ -53,12 +53,16 @@ ae.Conductor = function(bpm, timesig, transitionBeats, players, function_downbea
             
             // Transition beat + transition state
             if (conductor.toNext) {
-                // //stop current
+                // stop current
+
+                // // pause-set-play method
                 // conductor.pausePlayers();
-                conductor.fadeOutPlayers(0.1, 10);
                 // conductor.setTailPlayers(true);
-                conductor.playPlayers(beat);
-                // conductor.metro.stop();
+                // conductor.playPlayers(beat);
+
+                // set-play-pause method
+                conductor.playAllTails(beat);
+                conductor.metro.stop();
 
                 //set next
                 conductor.bpm = conductor.nextBpm;
@@ -75,16 +79,16 @@ ae.Conductor = function(bpm, timesig, transitionBeats, players, function_downbea
                 conductor.resetPlayers();
 
                 //play new
-                // conductor.metro.start();
+                conductor.metro.start();
                 conductor.playPlayers();
             }
-            // Transition beat + tail state
-            else if (conductor.toTail) {
-                console.log("toTail is true");
-                conductor.setTailPlayers(true);
-                conductor.toNext = true;
-                // conductor.fadeOutPlayers(0.1, 100);
-            }
+            // // Transition beat + tail state
+            // else if (conductor.toTail) {
+            //     console.log("toTail is true");
+            //     conductor.setTailPlayers(true);
+            //     conductor.toNext = true;
+            //     // conductor.fadeOutPlayers(0.1, 100);
+            // }
             // Downbeat; transition beat but not transition state
             else if (beat == 0) {
                 conductor.function_downbeat();
@@ -160,7 +164,7 @@ ae.Conductor.prototype.fadeOutPlayers = function(step, interval) {
 // Determine whether players' tails should be played
 ae.Conductor.prototype.setTailPlayers = function(tf) {
     for (var i=0; i<this.players.length; i++) {
-        this.players[i].playTail = tf;
+        this.players[i].tailActivated = tf;
     }
 }
 
@@ -206,6 +210,14 @@ ae.Conductor.prototype.checkAllLoaded = function() {
     // console.log("--");
 }
 
+// Play tails for all players
+ae.Conductor.prototype.playAllTails = function(beat) {
+    for (var i=0; i<this.players.length; i++) {
+        var player = this.players[i];
+        player.playTail(beat);
+    }   
+}
+
 
 /*
     Loop object.
@@ -223,7 +235,7 @@ ae.Conductor.prototype.checkAllLoaded = function() {
     
     Default vars:
     - initPlayed = whether init has been played yet
-    - playTail = whether tail should be played
+    - tailActivated = whether tail should be played
     
     - activated = whether loop is "activated" or not within current cycle (on/off ctrl)
     - url_{init, loop} = URLs of init and loop audio files
@@ -244,7 +256,7 @@ ae.Loop = function(init, loop, tail, defaultMul) {
     this.activated = true;
 
     this.initPlayed = false;
-    this.playTail = false;
+    this.tailActivated = false;
     this.url_init = init;
     this.url_loop = loop;
 
@@ -261,7 +273,7 @@ ae.Loop.prototype.play = function(beat) {
     if (!this.activated) {
         return;
     }
-    if (this.playTail) {
+    if (this.tailActivated) {
         // Determine which tail sample to play
         for (var i=0; i<this.tail.length; i++) {
             tail = this.tail[i];
@@ -311,7 +323,7 @@ ae.Loop.prototype.reset = function() {
 
     //Settings for which audio stream to play
     this.initPlayed = false;
-    this.playTail = false;
+    this.tailActivated = false;
 
     // Settings for activation and volume
     this.on();
@@ -331,9 +343,9 @@ ae.Loop.prototype.off = function() {
 ae.Loop.prototype.setMul = function(mul) {
     this.loop.mul = mul;
     this.init.mul = mul;
-    // for (var i=0; i<this.tail.length; i++) {
-    //     this.tail[i].audio.mul = mul;
-    // }
+    for (var i=0; i<this.tail.length; i++) {
+        this.tail[i].audio.mul = mul;
+    }
     this.mul = mul;
 }
 ae.Loop.prototype.mute = function() {
@@ -384,6 +396,29 @@ ae.Loop.prototype.fadeIn = function(step, interval) {
     }, interval);
 }
 
+// Play tail, pause init and loop
+ae.Loop.prototype.playTail = function(beat) {
+    // Determine which tail sample to play
+    for (var i=0; i<this.tail.length; i++) {
+        var tail = this.tail[i];
+        if (tail.beats.indexOf(beat) >= 0) {
+            tail.audio.play();
+            tail.audio.bang();
+            console.log("playing tail: " + tail.url + " on beat " + beat);
+            // this.activated = false;
+            // console.log("deactivated");
+        }
+    }
+
+    // Pause init and loop
+    var nontails = [this.init, this.loop];
+    for (var i=0; i<nontails.length; i++) {
+        var nontail = nontails[i];
+        nontail.pause();
+        nontail.currentTime = 0;
+    }
+}
+
 /*
     Audio wrapping; converts audio from URLs to T("audio") objects
 */
@@ -416,6 +451,8 @@ ae.btom = function(bpm) {
     // return Math.round(((60/bpm)*1000)*100000) / 100000;
     return (((60/bpm)*1000)*100000) / 100000;
 }
+
+// ae.fadeOutAudio()
 
 return ae;
 
