@@ -59,5 +59,7 @@ console.log("START");
     console.log("boop");
 }, function() {
     console.log("STOP");
-});  
+});
+
+conductor.start();
 ```
