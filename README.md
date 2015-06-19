@@ -39,25 +39,25 @@ The audio engine focuses on the use of a **Conductor**, which has control over i
 - (mute/unmute is similar to on/off but takes place immediately)
 
 #### Usage
-    ```javascript
-    //Loops
-    var kinotheme_bpm = 170;
-    var kinotheme_timesig = 76;
-    var kinotheme_transitionBeats = [0,10,20,30,40,50,60,70];
-    var mp3dir = "";
+```javascript
+//Loops
+var kinotheme_bpm = 170;
+var kinotheme_timesig = 76;
+var kinotheme_transitionBeats = [0,10,20,30,40,50,60,70];
+var mp3dir = "";
 
-    var kinotheme_piano = new AudioEngine.Loop(mp3dir + "kinotheme init piano.wav", mp3dir + "kinotheme loop piano.wav", [{url: mp3dir + "kinotheme tail piano.wav", beats: [0]}]);
-    var kinotheme_vox = new AudioEngine.Loop(
-        mp3dir + "kinotheme vox.wav", mp3dir + "kinotheme vox.wav", [{url: mp3dir + "empty.wav", beats: [0]}],
-        0);
-    var kinotheme_arr = [kinotheme_piano, kinotheme_vox];
+var kinotheme_piano = new AudioEngine.Loop(mp3dir + "kinotheme init piano.wav", mp3dir + "kinotheme loop piano.wav", [{url: mp3dir + "kinotheme tail piano.wav", beats: [0]}]);
+var kinotheme_vox = new AudioEngine.Loop(
+    mp3dir + "kinotheme vox.wav", mp3dir + "kinotheme vox.wav", [{url: mp3dir + "empty.wav", beats: [0]}],
+    0);
+var kinotheme_arr = [kinotheme_piano, kinotheme_vox];
 
-    //Conductor
-    var conductor = new AudioEngine.Conductor(kinotheme_bpm, kinotheme_timesig, kinotheme_transitionBeats, loop_arr, function() {
-    console.log("START");
-    }, function() {
-        console.log("boop");
-    }, function() {
-        console.log("STOP");
-    });  
-    ```
+//Conductor
+var conductor = new AudioEngine.Conductor(kinotheme_bpm, kinotheme_timesig, kinotheme_transitionBeats, loop_arr, function() {
+console.log("START");
+}, function() {
+    console.log("boop");
+}, function() {
+    console.log("STOP");
+});  
+```
