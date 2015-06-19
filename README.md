@@ -39,6 +39,7 @@ The audio engine focuses on the use of a **Conductor**, which has control over i
 - (mute/unmute is similar to on/off but takes place immediately)
 
 #### Usage
+    ```javascript
     //Loops
     var kinotheme_bpm = 170;
     var kinotheme_timesig = 76;
