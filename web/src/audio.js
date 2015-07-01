@@ -5,7 +5,7 @@
     Global
 */
 var mp3dir = "../layers%20Project/stems/"
-
+var current_theme = "diss";
 
 /*
     Disstheme
@@ -67,6 +67,7 @@ function toDisstheme() {
     conductor.nextTransitionBeats = disstheme_transitionBeats;
     conductor.toNext = true;
     // conductor.toTail = true;
+    current_theme = "diss";
 }
 
 /*
@@ -101,6 +102,7 @@ function toKinotheme() {
     // conductor.toTail = true;
 
     // playLoops(loop_arr);
+    current_theme = "kino";
 }
 
 // var sprite_gtr = AudioEngine.to_audio("mp3/sprite_gtr.mp3");
@@ -128,6 +130,28 @@ var conductor = new AudioEngine.Conductor(disstheme_bpm, loop_timesig, disstheme
 // var checker = setInterval(function() {
 //     conductor.checkAllLoaded();
 // }, 100);
+
+
+/*
+    Scroll control!
+*/
+var scroll = 0;
+$(window).scroll(function(event) {
+    scroll = $(window).scrollTop();
+    console.log ("scroll is " + scroll);
+    if (scroll > 1500) {
+        if (current_theme != "kino") {
+            toKinotheme();
+            console.log("-> kino");
+        }
+    }
+    else {
+        if (current_theme != "diss") {
+            toDisstheme();
+            console.log("-> diss");
+        }
+    }
+});
 
 // // For testing; uncomment for production
 // })();
