@@ -1,4 +1,4 @@
-var AudioEngine = (function(ae) {
+var Kino = (function(ae) {
 /*
     Conductor object. A glorified Metronome.
 
@@ -456,4 +456,4 @@ ae.btom = function(bpm) {
 
 return ae;
 
-}(AudioEngine || {}));
+}(Kino || {}));
