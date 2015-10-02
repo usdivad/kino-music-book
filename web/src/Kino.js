@@ -247,11 +247,25 @@ ae.Conductor.prototype.playAllTails = function(beat) {
 */
 ae.Loop = function(init, loop, tail, defaultMul) {
     this.init = ae.to_audio(init);    
-    this.loop = ae.to_audio(loop);
+
+    if (loop !== undefined) {
+        this.loop = ae.to_audio(loop);
+    }
+    else {
+        loop = init;
+        this.loop = this.init;
+    }
+    console.log(this.loop);
+
     // this.tail = ae.to_audio(tail);
     this.tail = tail;
-    for (var i=0; i<this.tail.length; i++) {
-        this.tail[i].audio = ae.to_audio(tail[i].url);
+    if (tail !== undefined) {
+        for (var i=0; i<this.tail.length; i++) {
+            this.tail[i].audio = ae.to_audio(tail[i].url);
+        }
+    }
+    else {
+        this.tail = [];
     }
     this.activated = true;
 
@@ -265,6 +279,7 @@ ae.Loop = function(init, loop, tail, defaultMul) {
         this.defaultMul = defaultMul;
     }
     this.mul = this.defaultMul;
+    console.log(this);
 
 }
 
@@ -425,10 +440,11 @@ ae.Loop.prototype.playTail = function(beat) {
 
 //Regular audio
 ae.to_audio = function(url) {
+    console.log("url: " + url);
     return T("audio").loadthis(url, function() {
         console.log("Done loading " + url);
-    }, function() {
-        console.log("Failed to load " + url);
+    }, function(e) {
+        console.log("Failed to load " + url + ": " + e);
     });
 }
 
