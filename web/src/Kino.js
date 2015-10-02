@@ -3,7 +3,9 @@ var Kino = (function(ae) {
     Conductor object. A glorified Metronome.
 
     Input vars:
-    - bpm = beats per minute (tempo)
+    - bpm = beats per minute (tempo), in formats:
+        - "BPM{bpm} L4" e.g. "BPM120 L4"
+        - "{beat distance in ms}" e.g. "500" for one beat every 500ms i.e. 120BPM
     - timesig = time signature; currently includes multiple bars, e.g. 4 bars of 13/4 makes a timesig of 13*4=52
     - players = an array of loops
     - transitionBeats = beats that are allowed to transition to another section
@@ -23,7 +25,8 @@ var Kino = (function(ae) {
 ae.Conductor = function(bpm, timesig, transitionBeats, players, function_downbeat, function_upbeat, function_stop) {
     var conductor = this;
     this.bpm = bpm;
-    this.interval = "BPM" + this.bpm + " L4";
+    this.interval = this.bpm;
+    // this.interval = "BPM" + this.bpm + " L4";
     this.timesig = timesig;
     this.players = players;
     this.transitionBeats = transitionBeats;
@@ -66,7 +69,8 @@ ae.Conductor = function(bpm, timesig, transitionBeats, players, function_downbea
 
                 //set next
                 conductor.bpm = conductor.nextBpm;
-                conductor.interval = "BPM" + conductor.bpm + " L4";
+                conductor.interval = conductor.bpm;
+                // conductor.interval = "BPM" + conductor.bpm + " L4";
                 conductor.metro = T("interval", {interval:conductor.interval}, conductor.metroFunction);
                 conductor.timesig = conductor.nextTimesig;
                 conductor.transitionBeats = conductor.nextTransitionBeats;
@@ -245,7 +249,7 @@ ae.Conductor.prototype.playAllTails = function(beat) {
 
     (- mute/unmute is similar to on/off but takes place immediately)
 */
-ae.Loop = function(init, loop, tail, defaultMul) {
+ae.Loop = function(init, loop, tail, defaultMul, to_loop) {
     this.init = ae.to_audio(init);    
 
     if (loop !== undefined) {

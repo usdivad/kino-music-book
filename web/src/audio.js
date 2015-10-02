@@ -11,7 +11,7 @@ var current_theme = "diss";
     Disstheme
 */
 // Timing, beats, etc.
-var disstheme_bpm = 80.75;
+var disstheme_bpm = "BPM" + 80.75 + " L4";
 var disstheme_timesig = 7*4; //7 bars * 4 beats
 var disstheme_transition_A1 = 2*4;
 var disstheme_transition_A2 = 4*4;
@@ -73,7 +73,7 @@ function toDisstheme() {
 /*
     Kinotheme
 */
-var kinotheme_bpm = 170;
+var kinotheme_bpm = "BPM" + 170 + " L4";
 var kinotheme_timesig = 76;
 var kinotheme_transitionBeats = [0,10,20,30,40,50,60,70];
 
