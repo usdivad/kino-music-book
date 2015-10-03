@@ -22,7 +22,7 @@ var Kino = (function(ae) {
 */
 
 //Constructor
-ae.Conductor = function(bpm, timesig, transitionBeats, players, function_downbeat, function_upbeat, function_stop) {
+ae.Conductor = function(bpm, timesig, transitionBeats, players, section, function_downbeat, function_upbeat, function_stop) {
     var conductor = this;
     this.bpm = bpm;
     this.interval = this.bpm;
@@ -40,6 +40,8 @@ ae.Conductor = function(bpm, timesig, transitionBeats, players, function_downbea
     this.nextTimesig = this.timesig;
     this.nextTransitionBeats = this.transitionBeats;
     this.nextPlayers = this.players;
+    this.section = section;
+    this.nextSection = section;
 
     //functions
     this.function_stop = function_stop;
@@ -75,6 +77,7 @@ ae.Conductor = function(bpm, timesig, transitionBeats, players, function_downbea
                 conductor.timesig = conductor.nextTimesig;
                 conductor.transitionBeats = conductor.nextTransitionBeats;
                 conductor.players = conductor.nextPlayers;
+                conductor.section = conductor.nextSection;
 
                 //reset globs
                 conductor.metro.count = 0; //hacky
@@ -224,12 +227,13 @@ ae.Conductor.prototype.playAllTails = function(beat) {
     }   
 }
 
-ae.Conductor.prototype.setupTransition = function(bpm, timesig, transitionBeats, players) {
+ae.Conductor.prototype.setupTransition = function(bpm, timesig, transitionBeats, players, section) {
     this.nextBpm = bpm;
     this.nextTimesig = timesig;
     this.nextTransitionBeats = transitionBeats;
     this.nextPlayers = players;
     this.toNext = true;
+    this.nextSection = section;
 }
 
 /*

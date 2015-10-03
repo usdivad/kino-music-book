@@ -68,6 +68,7 @@ function toDisstheme() {
     conductor.toNext = true;
     // conductor.toTail = true;
     current_theme = "diss";
+    conductor.section = "diss";
 }
 
 /*
@@ -103,6 +104,7 @@ function toKinotheme() {
 
     // playLoops(loop_arr);
     current_theme = "kino";
+    conductor.section = "kino";
 }
 
 // var sprite_gtr = Kino.to_audio("mp3/sprite_gtr.mp3");
@@ -114,7 +116,7 @@ function toKinotheme() {
 var loop_arr = disstheme_arr;
 var loop_timesig = disstheme_timesig;
 
-var conductor = new Kino.Conductor(disstheme_bpm, loop_timesig, disstheme_transitionBeats, loop_arr, function() {
+var conductor = new Kino.Conductor(disstheme_bpm, loop_timesig, disstheme_transitionBeats, loop_arr, current_theme, function() {
     console.log("START");
     // pauseLoops(loop_arr);
     // playLoops(loop_arr);
