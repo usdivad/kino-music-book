@@ -97,6 +97,7 @@ ae.Conductor = function(bpm, timesig, transitionBeats, players, function_downbea
             else if (beat == 0) {
                 conductor.function_downbeat();
                 conductor.playPlayers(beat);
+                console.log(beat);
             }
             // console.log("beep");
         }
@@ -104,13 +105,14 @@ ae.Conductor = function(bpm, timesig, transitionBeats, players, function_downbea
         else if (beat == 0) {
             conductor.function_downbeat();
             conductor.playPlayers(beat);
+            console.log(beat);
         }
         // Upbeats
         else {
             conductor.function_upbeat();
             // console.log("boop");
         }
-        console.log(beat);
+        // console.log(beat);
     };
 
     this.metro = T("interval", {interval: conductor.interval}, this.metroFunction);
@@ -222,6 +224,13 @@ ae.Conductor.prototype.playAllTails = function(beat) {
     }   
 }
 
+ae.Conductor.prototype.setupTransition = function(bpm, timesig, transitionBeats, players) {
+    this.nextBpm = bpm;
+    this.nextTimesig = timesig;
+    this.nextTransitionBeats = transitionBeats;
+    this.nextPlayers = players;
+    this.toNext = true;
+}
 
 /*
     Loop object.
@@ -250,7 +259,7 @@ ae.Conductor.prototype.playAllTails = function(beat) {
     (- mute/unmute is similar to on/off but takes place immediately)
 */
 ae.Loop = function(init, loop, tail, defaultMul, to_loop) {
-    this.init = ae.to_audio(init);    
+    this.init = ae.to_audio(init);   
 
     if (loop !== undefined) {
         this.loop = ae.to_audio(loop);
@@ -260,6 +269,10 @@ ae.Loop = function(init, loop, tail, defaultMul, to_loop) {
         this.loop = this.init;
     }
     console.log(this.loop);
+    if (to_loop) {
+        this.init.loop(1);
+        this.loop.loop(1);
+    }
 
     // this.tail = ae.to_audio(tail);
     this.tail = tail;
@@ -271,6 +284,8 @@ ae.Loop = function(init, loop, tail, defaultMul, to_loop) {
     else {
         this.tail = [];
     }
+
+
     this.activated = true;
 
     this.initPlayed = false;
@@ -290,6 +305,7 @@ ae.Loop = function(init, loop, tail, defaultMul, to_loop) {
 //Play/pause
 ae.Loop.prototype.play = function(beat) {
     if (!this.activated) {
+        console.log("not activated)");
         return;
     }
     if (this.tailActivated) {
@@ -345,7 +361,7 @@ ae.Loop.prototype.reset = function() {
     this.tailActivated = false;
 
     // Settings for activation and volume
-    this.on();
+    // this.on();
     // this.unmute();
     this.setMul(this.defaultMul);
 }
