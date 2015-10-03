@@ -84,7 +84,7 @@ ae.Conductor = function(bpm, timesig, transitionBeats, players, function_downbea
 
                 //play new
                 conductor.metro.start();
-                conductor.playPlayers();
+                // conductor.playPlayers();
             }
             // // Transition beat + tail state
             // else if (conductor.toTail) {
