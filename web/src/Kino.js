@@ -115,7 +115,7 @@ ae.Conductor = function(bpm, timesig, transitionBeats, players, section, functio
             conductor.function_upbeat();
             // console.log("boop");
         }
-        // console.log(beat);
+        console.log(beat);
     };
 
     this.metro = T("interval", {interval: conductor.interval}, this.metroFunction);
