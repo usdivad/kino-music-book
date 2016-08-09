@@ -1,0 +1,9 @@
+*.txt
+*.asd
+*.mp3
+*.wav
+*.mid
+*/Samples/*
+.DS_Store
+*.PNG
+*.JPG
